@@ -10,6 +10,7 @@ const app = async (yargsObj) => {
     await addMovie(collection, {
       title: yargsObj.title,
       actor: yargsObj.actor,
+      rating: yargs.rating,
       $and: yargsObj.year,
     });
     console.log("success, entry added");
@@ -19,6 +20,7 @@ const app = async (yargsObj) => {
     await updateMovies(collection, {
       title: yargsObj.title,
       actor: yargsObj.actor,
+      rating: yargs.rating,
       $and: yargsObj.year,
     });
     console.log("success, entry updated");
