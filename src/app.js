@@ -2,7 +2,7 @@ const yargs = require("yargs");
 
 const { connection, client } = require("./db/connection");
 
-const { addMovie, listMovie } = require("./utils");
+const { addMovie, listMovies, movieUpdate } = require("./utils");
 
 const app = async (yargsObj) => {
   const collection = await connection();
@@ -14,7 +14,7 @@ const app = async (yargsObj) => {
     });
     console.log("success, entry added");
   } else if (yargsObj.list) {
-    await listMovie(collection);
+    await listMovies(collection);
   } else {
     console.log("incorrect command");
   }
