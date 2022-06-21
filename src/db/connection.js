@@ -1,10 +1,8 @@
 require("dotenv").config();
 
-const { MongoClient, Collection } = require("mongodb");
+const { MongoClient } = require("mongodb");
 
-const client = new MongoClient(
-  "mongodb+srv://OllieJudge:i4Iaf3i33dbBKo7e@cluster0.cduml.mongodb.net/?retryWrites=true&w=majority"
-);
+const client = new MongoClient(process.env.MONGO_URI);
 
 const connection = async () => {
   try {
@@ -18,3 +16,5 @@ const connection = async () => {
 };
 
 // connection();
+
+module.exports = { connection, client };
