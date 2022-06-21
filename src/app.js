@@ -10,16 +10,16 @@ const app = async (yargsObj) => {
     await addMovie(collection, {
       title: yargsObj.title,
       actor: yargsObj.actor,
-      year: yargsObj.year,
+      $and: yargsObj.year,
     });
     console.log("success, entry added");
   } else if (yargsObj.list) {
     await listMovies(collection);
   } else if (yargsObj.update) {
-    await updateMovie(collection, {
+    await updateMovies(collection, {
       title: yargsObj.title,
       actor: yargsObj.actor,
-      year: yargsObj.year,
+      $and: yargsObj.year,
     });
     console.log("success, entry updated");
   } else if (yargsObj.delete) {

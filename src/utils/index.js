@@ -24,7 +24,7 @@ exports.listMovies = async (collection) => {
 
 exports.updateMovies = async (collection, movieObj) => {
   try {
-    const movieUpdate = await collection.updateOne(movieObj);
+    const movieUpdate = await collection.findOne().updateOne(movieObj);
     console.log(movieUpdate);
   } catch (error) {
     console.log(error);
