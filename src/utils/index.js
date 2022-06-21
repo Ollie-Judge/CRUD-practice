@@ -13,8 +13,8 @@ exports.addMovie = async (collection, movieObj) => {
 
 exports.listMovies = async (collection) => {
   try {
-    const moviesList = await collection.find().toArray();
-    console.log(moviesList);
+    const movieList = await collection.find().toArray();
+    console.log(movieList);
   } catch (error) {
     console.log(error);
   }
@@ -22,4 +22,22 @@ exports.listMovies = async (collection) => {
 
 // function for updating the database
 
+exports.updateMovies = async (collection, movieObj) => {
+  try {
+    const movieUpdate = await collection.updateOne(movieObj);
+    console.log(movieUpdate);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // function for deleting the database
+
+exports.deleteMovies = async (collection, movieObj) => {
+  try {
+    const movieDelete = await collection.deleteOne(movieObj);
+    console.log(movieDelete);
+  } catch (error) {
+    console.log(error);
+  }
+};
