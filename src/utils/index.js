@@ -1,43 +1,38 @@
-// Function for adding a movie
-
-exports.addMovie = async (collection, movieObj) => {
-  try {
-    const addEntry = await collection.insertOne(movieObj);
-    console.log(addEntry);
-  } catch (error) {
-    console.log(error);
+const { MongoDBNamespace } = require("mongodb");
+class Movie {
+  constructor(title, actor, info = "Not specified") {
+    this.title = title;
+    this.actor = actor;
+    this.info = info;
   }
-};
-
-//List for movies in the database
-
-exports.listMovies = async (collection) => {
-  try {
-    const movieList = await collection.find().toArray();
-    console.log(movieList);
-  } catch (error) {
-    console.log(error);
+  // Function for adding a movie
+  async add(collection) {
+    await collection.insertOne(this);
+    console.log("your movie has been added");
   }
-};
-
-// function for updating the database
-
-exports.updateMovies = async (collection, movieObj) => {
-  try {
-    const movieUpdate = await collection.findOne().updateOne(movieObj);
-    console.log(movieUpdate);
-  } catch (error) {
-    console.log(error);
+  //List for movies in the database
+  async list(collection) {
+    return await collection.find().toArray();
   }
-};
-
-// function for deleting the database
-
-exports.deleteMovies = async (collection, movieObj) => {
-  try {
-    const movieDelete = await collection.deleteOne(movieObj);
-    console.log(movieDelete);
-  } catch (error) {
-    console.log(error);
+  // function for updating the database
+  async update(collection) {
+    await collection.updateOne(
+      { title: this.title },
+      {
+        $set: {
+          title: this.title,
+          actor: this.actor,
+          info: this.info,
+        },
+      }
+    );
+    console.log("Your movie has been updated");
   }
-};
+  // function for deleting the database
+  async delete(collection) {
+    await collection.deleteOne({ title: this.title });
+    console.log("your movie has been deleted");
+  }
+}
+
+module.exports = Movie;

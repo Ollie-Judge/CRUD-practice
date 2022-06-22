@@ -2,35 +2,30 @@ const yargs = require("yargs");
 
 const { connection, client } = require("./db/connection");
 
-const { addMovie, listMovies, updateMovies, deleteMovies } = require("./utils");
+const Movie = require("./utils");
 
 const app = async (yargsObj) => {
   const collection = await connection();
-  if (yargsObj.add) {
-    await addMovie(collection, {
-      title: yargsObj.title,
-      actor: yargsObj.actor,
-      rating: yargs.rating,
-      $and: yargsObj.year,
-    });
-    console.log("success, entry added");
-  } else if (yargsObj.list) {
-    await listMovies(collection);
-  } else if (yargsObj.update) {
-    await updateMovies(collection, {
-      title: yargsObj.title,
-      actor: yargsObj.actor,
-      rating: yargs.rating,
-      $and: yargsObj.year,
-    });
-    console.log("success, entry updated");
-  } else if (yargsObj.delete) {
-    await deleteMovies(collection);
-    console.log("success, entry deleted");
-  } else {
-    console.log("incorrect command");
+  try {
+    if (yargsObj.add) {
+      const movie = new Movie(yargsObj.title, yargsObj.actor);
+      console.log(await movie.add(collection));
+    } else if (yargsObj.list) {
+      const movie = new Movie(yargsObj.title, yargsObj.actor);
+      console.log(await movie.list(collection));
+    } else if (yargsObj.update) {
+      const movie = new Movie(yargsObj.title, yargsObj.actor, yargsObj.year);
+      console.log(await movie.update(collection));
+    } else if (yargsObj.delete) {
+      const movie = new Movie(yargsObj.title, yargsObj.actor, yargsObj.year);
+      console.log(await movie.delete(collection));
+    } else {
+      console.log("incorrect command");
+    }
+    await client.close();
+  } catch (error) {
+    console.log(error);
   }
-  await client.close();
 };
 
 app(yargs.argv);
