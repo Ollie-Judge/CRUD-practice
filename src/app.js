@@ -1,31 +1,42 @@
 const yargs = require("yargs");
 
-const { connection, client } = require("./db/connection");
-
-const Movie = require("./utils");
+const { connection, client } = require("./db/connection.js");
+const { addMovie, listMovies, updateMovie, deleteMovie } = require("./utils");
 
 const app = async (yargsObj) => {
   const collection = await connection();
-  try {
-    if (yargsObj.add) {
-      const movie = new Movie(yargsObj.title, yargsObj.actor);
-      console.log(await movie.add(collection));
-    } else if (yargsObj.list) {
-      const movie = new Movie(yargsObj.title, yargsObj.actor);
-      console.log(await movie.list(collection));
-    } else if (yargsObj.update) {
-      const movie = new Movie(yargsObj.title, yargsObj.actor, yargsObj.year);
-      console.log(await movie.update(collection));
-    } else if (yargsObj.delete) {
-      const movie = new Movie(yargsObj.title, yargsObj.actor, yargsObj.year);
-      console.log(await movie.delete(collection));
-    } else {
-      console.log("incorrect command");
+  if (yargsObj.add) {
+    await addMovie(collection, {
+      title: yargsObj.title,
+      actor: yargsObj.actor,
+      rating: yargsObj.rating,
+    });
+    console.log("Success, your entry has been added to the database");
+  } else if (yargsObj.list) {
+    await listMovies(collection);
+  } else if (yargsObj.update) {
+    let criteria = { title: yargsObj.update };
+
+    let changes = {};
+
+    if (yargsObj.title) {
+      Object.assign(changes, { title: yargsObj.title });
     }
-    await client.close();
-  } catch (error) {
-    console.log(error);
+    if (yargsObj.actor) {
+      Object.assign(changes, { actor: yargsObj.actor });
+    }
+    if (yargsObj.rating) {
+      Object.assign(changes, { rating: yargsObj.rating });
+    }
+    await updateMovie(collection, criteria, changes);
+  } else if (yargsObj.delete) {
+    let criteria = { title: yargsObj.delete };
+    await deleteMovie(collection, criteria);
+  } else {
+    console.log("the command you have entered is incorrect");
   }
+
+  await client.close();
 };
 
 app(yargs.argv);
